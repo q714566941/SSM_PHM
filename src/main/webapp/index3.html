@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="echarts/echarts.min.js"></script>
+    <script src="http://gallery.echartsjs.com/dep/echarts/map/js/world.js "></script> 
+    <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.min.js"></script>
+</head>
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 600px;height:300px;"></div>
+    <div id="line" style="width: 600px;height:300px;position:absolute; left:610px;top:8px;"></div>
+    <div id="pie" style="width: 600px;height:300px;position:absolute; top:310px;"></div>
+    <div id="bar" style="width: 600px;height:300px;position:absolute; left:610px;top:310px;"></div>
+    <div id="graph" style="width: 600px;height:300px;position:absolute; top:620px;"></div>
+    <div id="scatter" style="width: 600px;height:300px;position:absolute; top:620px; left:610px;"></div>
+    <div id="funnel" style="width: 600px;height:300px;position:absolute; top:930px;"></div>
+    <div id="radar" style="width: 600px;height:300px;position:absolute; top:930px;left:610px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例,地图
+        var myChart = echarts.init(document.getElementById('main'));
+        function makeMapData(rawData) {
+            var mapData = [];
+            for (var i = 0; i < rawData.length; i++) {
+                var geoCoord = rawData[i].loc;
+                if (geoCoord) {
+                    mapData.push({
+                        name: rawData[i].name,
+                        value: geoCoord.concat(rawData[i].val)
+                    });
+                }
+            }
+            return mapData;
+        };
+
+        myChart.setOption({
+        	backgroundColor: new echarts.graphic.RadialGradient(0.5, 0.5, 0.4, [{
+                offset: 0,
+                color: '#4b5769'
+            }, {
+                offset: 1,
+                color: '#404a59'
+            }]),
+        	title:{
+        		text: 'Ip地理图',
+        		textStyle: {
+        	           color: '#eee'
+        	       }
+        	},
+        	tooltip:{
+        		trigger: 'item',
+                formatter: function (params) {
+                    return params.name + ' : ' + params.value[2];;
+                }
+        	},
+        	 geo: {
+        	        map: 'world',
+        	        silent: true,
+        	        label: {
+        	            emphasis: {
+        	                show: false,
+        	                areaColor: '#eee'
+        	            }
+        	        },
+        	        itemStyle: {
+        	            normal: {
+        	                borderWidth: 0.2,
+        	                borderColor: '#404a59'
+        	            }
+        	        },
+        	        left: '6%',
+        	        top: 40,
+        	        bottom: '54%',
+        	        right: '14%',
+        	        roam: true
+        	    },
+        	 visualMap: {
+        	        min: 0,
+        	        max: 800,
+        	        calculable: true,
+        	        inRange: {
+        	            color: ['#50a3ba', '#eac736', '#d94e5d']
+        	        },
+        	        textStyle: {
+        	            color: '#fff'
+        	        }
+        	    },
+        	series:[
+                {
+                    name: 'IP地理图',
+                    type: 'scatter',
+                    coordinateSystem: 'geo',
+                    symbolSize: 8,
+                    data: [],
+                    activeOpacity: 1,
+                    label: {
+                        normal: {
+                            formatter: '{b}',
+                            position: 'right',
+                            show: false
+                        },
+                        emphasis: {
+                            show: true
+                        }
+                    },
+                    symbolSize: 10,
+                    itemStyle: {
+                        normal: {
+                            borderColor: '#fff',
+                            color: '#577ceb',
+                        }
+                    }
+                },
+            ]
+        });
+        myChart.showLoading();
+        
+        var nums = [];
+        $.ajax({
+        	type:"post",
+        	async:true,
+        	url:"TestServlet",
+        	data:{},
+        	dataType:"json",
+        	success:function(res){
+        		if(res){
+        			nums = makeMapData(res);
+        			myChart.hideLoading();
+        			myChart.setOption({
+        				series:[{
+        					name:'IP地理图',
+        					data:nums
+        				}]
+        			});
+        		}
+        	}
+        	
+        });
+        
+        //折现图
+        var lineChart = echarts.init(document.getElementById('line'));
+        lineChart.setOption({
+        	title:{
+        		text:'Ip次数前五折线图'
+        	},
+        	xAxis: {
+    	        type: 'category',
+    	        data: []
+    	    },
+    	    yAxis: {
+    	        type: 'value'
+    	    },
+    	    tooltip:{
+        		trigger: 'item',
+                formatter: '{a}:{b}<br\>{c}'
+        	},
+    	    series: [{
+    	    	name:'ip地址',
+    	        data: [],
+    	        type: 'line'
+    	    }]
+        });
+        var ipList = [];
+        var ipNums = [];
+        var select = {};
+        $.ajax({
+        	type:"post",
+        	async:true,
+        	url:"TestServlet",
+        	data:{},
+        	dataType:"json",
+        	success:function(res){
+        		if(res){
+        			//排序
+        			res.sort(function (a, b) { return b.val - a.val; });
+        			for(var i=0;i<res.length;i++){
+        				if(res[i]!=null && i<5){
+        					ipList.push(res[i].ip);
+            				ipNums.push(res[i].val);
+        				}
+        				if(i>=5)
+        					break;
+        			}
+        			lineChart.hideLoading();
+        			lineChart.setOption({
+        				xAxis: {
+        	    	        data: ipList
+        	    	    },
+        	    	    legend:{
+        	    	    	data : ipList,
+        	    	    	selected:select
+        	    	    },
+        				series:[{
+        					name:'ip地址',
+        					data:ipNums
+        				}]
+        			});
+        		}
+        	}
+        	
+        });
+        //饼图
+        var pieChart = echarts.init(document.getElementById('pie'));
+        pieChart.setOption({
+        	    title: {
+        	        text: 'IP Pie',
+        	        top: 20,
+        	    },
+
+        	    tooltip : {
+        	        trigger: 'item',
+        	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        	    },
+        	    legend: {
+        	        type: 'scroll',
+        	        orient: 'vertical',
+        	        right: 10,
+        	        top: 20,
+        	        bottom: 20,
+        	        data:[],
+        	        selected:{}
+        	    },
+
+        	  /*   visualMap: {
+        	        show: false,
+        	        min: 80,
+        	        max: 600,
+        	        inRange: {
+        	            colorLightness: [0, 1]
+        	        }
+        	    }, */
+        	    series : [
+        	        {
+        	            name:'ip登录次数',
+        	            type:'pie',
+        	            radius : '55%',
+        	            center: ['40%', '50%'],
+        	            data:[],
+        	            roseType: 'radius',
+        	            itemStyle: {
+        	                emphasis: {
+        	                    shadowBlur: 10,
+        	                    shadowOffsetX: 0,
+        	                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+        	                }
+        	            }
+        	        }
+        	    ]
+        });
+        /* 饼图 */
+        function makePieData(rawData) {
+        	var pieData = [];
+            for (var i = 0; i < rawData.length; i++) {
+                var ip = rawData[i].ip;
+                if (ip!=null) {
+                    pieData.push({
+                        name: rawData[i].ip,
+                        value: rawData[i].val
+                    });
+                }
+            }
+            return pieData;
+        };
+        $.ajax({
+        	type:"post",
+        	async:true,
+        	url:"TestServlet",
+        	data:{},
+        	dataType:"json",
+        	success:function(res){
+        		if(res){
+        			var pieData = makePieData(res);
+        			pieData.sort(function (a, b) { return b.value - a.value; });
+        			var ipList = [];
+        			var selected = {};
+        			
+        			for(var i =0;i<pieData.length;i++){
+        				ipList.push(pieData[i]);
+        				selected[pieData[i].name] = pieData[i].value>40;
+        			}
+        			pieChart.hideLoading();
+        			pieChart.setOption({
+        				legend:{
+        					data:ipList,
+        					selected:selected
+        				},
+        				series:[{
+        					data:pieData
+        				}]
+        			});
+        		}
+        	}
+        	
+        });
+        /* 柱状图 */
+         var barChart = echarts.init(document.getElementById('bar'));
+         barChart.setOption({
+        	 title: {
+     	        text: 'Ip次数前5柱状图',
+     	        top:20
+     	    },
+        	 xAxis: {
+        	        type: 'category',
+        	        data: []
+        	    },
+        	    yAxis: {
+        	        type: 'value'
+        	    },
+        	    tooltip:{
+            		trigger: 'item',
+                    formatter: '{a}:{b}<br\>{c}'
+            	},
+        	    series: [{
+        	        data: [],
+        	        type: 'bar',
+        	    }]
+         });
+         //柱状图
+         var ipList1 = [];
+         var ipNums1 = [];
+         $.ajax({
+         	type:"post",
+         	async:true,
+         	url:"TestServlet",
+         	data:{},
+         	dataType:"json",
+         	success:function(res){
+         		if(res){
+         			var barData = makePieData(res);
+        			barData.sort(function (a, b) { return b.value - a.value; });
+         			for(var i=0;i<res.length;i++){
+         				if(res[i]!=0&&i<5){
+         					ipList1.push(barData[i].name);
+             				ipNums1.push(barData[i].value);
+         				}
+         			}
+         			barChart.hideLoading();
+         			barChart.setOption({
+         				xAxis: {
+         	    	        data: ipList1
+         	    	    }, 
+         				series:[{
+         					name:'ip地址',
+         					data:ipNums1
+         				}]
+         			});
+         		}
+         	}
+         	
+         });
+         
+         /* 关系图  */
+          var graphChart = echarts.init(document.getElementById('graph'));
+          graphChart.setOption(
+        		  {
+        		        title: {
+        		            text: 'IP关系图',
+        		            /* subtext: 'Default layout',
+        		            top: 'bottom',
+        		            left: 'right' */
+        		        },
+        		        tooltip: {},
+        		        animation: false,
+        		        series : [
+        		            {
+        		                name: 'Les Miserables',
+        		                type: 'graph',
+        		                layout: 'force',
+        		                data: [],
+        		                links:[],
+        		                roam: true,
+        		                label: {
+        		                    normal: {
+        		                        position: 'right'
+        		                    }
+        		                },
+        		                lineStyle: {
+        		                    normal: {
+        		                        opacity: 0.9,
+        		                        width: 2,
+        		                        curveness: 0
+        		                    }
+        		                },
+        		                 force: {
+        		                    repulsion: 20
+        		                } 
+        		            }
+        		        ]
+        		    }	  
+          );
+          //获取数据
+           $.ajax({
+         	type:"post",
+         	async:true,
+         	url:"TestServlet",
+         	data:{},
+         	dataType:"json",
+         	success:function(res){
+         		if(res){
+         			//关系列表
+         			var relationList = [];
+         			relationList = res[0].relationList;
+        			res.sort(function (a, b) { return b.val - a.val; });
+        			//data
+         			var graphData = [];
+        			//links
+        			var graphLinks = [];
+        			
+        			//cate
+        		   // var categories = [];
+         			for(var i=0;i<res.length;i++){
+         			   // categories.push(res[i].ip);
+         				graphData.push({
+         					name: res[i].ip,
+         					value: res[i].val,
+         					//category : res[i].ip
+         				});
+         			}
+         			//console.log(graphData);
+         			//获取links
+         			for(var i=0;i<relationList.length;i++){
+         				graphLinks.push({
+         					source:relationList[i][0],
+         					target:relationList[i][1]
+         				});
+         			}
+         			//console.log(graphLinks);
+         			graphChart.hideLoading();
+         			if(graphLinks!=null){
+         				graphChart.setOption({
+            				 series : [{
+            					data : graphData,
+                 				links : graphLinks,
+                 				//categories: categories
+                				}]
+            				
+            			});
+         			}
+         		
+         		}
+         	}
+         	
+         }); 
+          
+          //散点图
+        var scatterChart = echarts.init(document.getElementById('scatter'));
+        scatterChart.setOption({
+        	title:{
+        		text:'Ip次数前五散点图'
+        	},
+        	xAxis: {
+    	        type: 'category',
+    	        data: []
+    	    },
+    	    yAxis: {
+    	        type: 'value'
+    	    },
+    	    tooltip:{
+        		trigger: 'item',
+                formatter: '{a}:{b}<br\>{c}'
+        	},
+    	    series: [{
+    	    	name:'ip地址',
+    	        data: [],
+    	        type: 'scatter'
+    	    }]
+        });
+        var ipScatter = [];
+        var scatterNums = [];
+        $.ajax({
+        	type:"post",
+        	async:true,
+        	url:"TestServlet",
+        	data:{},
+        	dataType:"json",
+        	success:function(res){
+        		if(res){
+        			//排序
+        			res.sort(function (a, b) { return b.val - a.val; });
+        			for(var i=0;i<res.length;i++){
+        				if(res[i]!=null && i<5){
+        					ipScatter.push(res[i].ip);
+        					scatterNums.push(res[i].val);
+        				}
+        				if(i>=5)
+        					break;
+        			}
+        			scatterChart.hideLoading();
+        			scatterChart.setOption({
+        				xAxis: {
+        	    	        data: ipScatter
+        	    	    },
+        	    	    legend:{
+        	    	    	data : ipScatter
+        	    	    },
+        				series:[{
+        					name:'ip地址',
+        					data:scatterNums
+        				}]
+        			});
+        		}
+        	}
+        	
+        });
+        //漏斗图
+        var funnelChart = echarts.init(document.getElementById('funnel'));
+        funnelChart.setOption({
+        	  title: {
+        	        text: '漏斗图'
+        	    },
+        	    tooltip: {
+        	        trigger: 'item',
+        	        formatter: "{a} <br/>{b} : {c}"
+        	    },
+        	    legend: {
+        	    	top:20,
+        	        data:[]
+        	    },
+        	   /*  toolbox: {
+        	        feature: {
+        	            dataView: {readOnly: false},
+        	            restore: {},
+        	            saveAsImage: {}
+        	        }
+        	    }, */
+        	    calculable: true,
+        	    series: [
+        	        {
+        	            name:'漏斗图',
+        	            type:'funnel',
+        	            left: '10%',
+        	            top: 60,
+        	            bottom: 60,
+        	            width: '80%',
+        	            min: 0,
+        	            max: 100,
+        	            minSize: '0%',
+        	            maxSize: '100%', 
+        	            sort: 'descending',
+        	            gap: 2,
+        	            label: {
+        	                show: true,
+        	                position: 'inside'
+        	            },
+        	            labelLine: {
+        	                length: 10,
+        	                lineStyle: {
+        	                    width: 1,
+        	                    type: 'solid'
+        	                }
+        	            },
+        	            itemStyle: {
+        	                borderColor: '#fff',
+        	                borderWidth: 1
+        	            },
+        	            emphasis: {
+        	                label: {
+        	                    fontSize: 20
+        	                }
+        	            },
+        	            data:[]
+        	        }
+        	    ]
+        });
+        var funnelIpList =[];
+        var funnelNums = [];
+        $.ajax({
+        	type:"post",
+        	async:true,
+        	url:"TestServlet",
+        	data:{},
+        	dataType:"json",
+        	success:function(res){
+        		if(res){
+        			//排序
+        			res.sort(function (a, b) { return b.val - a.val; });
+        			for(var i=0;i<res.length;i++){
+        				if(res[i]!=null && i<5){
+        					funnelIpList.push(res[i].ip);
+        					funnelNums.push({
+        						name:res[i].ip,
+        						value:res[i].val
+        					});
+        				}
+        				if(i>=5)
+        					break;
+        			}
+        			funnelChart.hideLoading();
+        			funnelChart.setOption({
+        	    	    legend:{
+        	    	    	data : funnelIpList
+        	    	    },
+        				series:[{
+        					data:funnelNums
+        				}]
+        			});
+        		}
+        	}
+        	
+        });
+        //雷达图
+        var radarChart = echarts.init(document.getElementById('radar'));
+        radarChart.setOption({
+        	title: {
+                text: '基础雷达图'
+            },
+            tooltip: {},
+            radar: {
+                name: {
+                    textStyle: {
+                        color: '#fff',
+                        backgroundColor: '#999',
+                        borderRadius: 3,
+                        padding: [3, 5]
+                   }
+                },
+                indicator: [
+                   { name: "A", max: 300},
+                   { name: "B", max: 50},
+                   { name: "C", max: 30},
+                   { name: "D", max: 30},
+                   { name: "E", max: 30}
+                ]
+            },
+            series: [{
+                name: 'ip地址分类',
+                type: 'radar',
+                data : []
+            }]
+        });
+        var ipRadarNums = [];
+        $.ajax({
+        	type:"post",
+        	async:true,
+        	url:"TestServlet",
+        	data:{},
+        	dataType:"json",
+        	success:function(res){
+        		if(res){
+        			var length = res.length;
+        			var ipArr = [];
+        			var ipTypeMap = res[length-1].ipTypeMap;
+        			//console.log(ipTypeMap);
+        			for(var i in ipTypeMap){
+        				ipArr.push(ipTypeMap[i]);
+        				
+        			} 
+        			while(ipArr.length<5){
+        				ipArr.push(0);
+        			} 
+        			//console.log(ipArr);
+        			radarChart.hideLoading();
+        			radarChart.setOption({
+        				series:[{
+        					data : [
+        			            {
+        			                value : ipArr
+        			            }
+        			        ]
+        			        
+        				}]
+        			});
+        		}
+        	}
+        	
+        });
+    </script>
+</body>
+</html>

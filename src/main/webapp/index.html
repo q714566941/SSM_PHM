@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>数据概览</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/data_text.css">
+    <link rel="stylesheet" href="css/foundation-datepicker.css">
+
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.min.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<script src="js/jquery-2.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/echarts.min.js"></script>
+<script src="js/echart.js"></script>
+<script src="js/china.js"></script>
+<script src="js/foundation-datepicker.js"></script>
+<script src="js/foundation-datepicker.zh-CN.js"></script>
+
+<!--header开始-->
+<div class="header">
+    <div class="header_logo fl">
+        <a href=""><img src="img/header_logo.png" alt=""></a>
+    </div>
+    <div class="header_nav fl">
+        <ul>
+            <li>
+                <img src="img/nav_1.png" alt="">
+                <a href="" class="nav_current">数据概览</a>
+            </li>
+           <li>
+                <img src="img/nav_2.png" alt="">
+                <a href="">应用监控</a>
+            <!-- </li>
+            <li>
+                <img src="img/nav_3.png" alt="">
+                <a href="">政府监管</a>
+            </li>
+            <li>
+                <img src="img/nav_4.png" alt="">
+                <a href="">参数设置</a>
+            </li>
+            <li>
+                <img src="img/nav_5.png" alt="">
+                <a href="">车载视频</a>
+            </li>
+            <li>
+                <img src="img/nav_6.png" alt="">
+                <a href="">视频监控</a>
+            </li>
+            <li>
+                <img src="img/nav_7.png" alt="">
+                <a href="">查询统计</a>
+            </li> -->
+            <!--<li>-->
+                <!--<img src="img/nav_8.png" alt="">-->
+                <!--<a href="#">行业应用</a>-->
+            <!--</li>-->
+            <li>
+                <img src="img/nav_9.png" alt="">
+                <a href="">后台管理</a>
+                <ul>
+                    <li>
+                        <a href="">平台管理</a>
+                        <ul>
+                            <li><a href="">平台管理1</a></li>
+                            <li><a href="">平台管理2</a></li>
+                            <li><a href="">平台管理3</a></li>
+                            <li><a href="">平台管理3</a></li>
+                            <li><a href="">平台管理3</a></li>
+                            <li><a href="">平台管理3</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="">设备管理</a>
+                        <ul>
+                            <li><a href="">设备管理1</a></li>
+                            <li><a href="">设备管理2</a></li>
+                            <li><a href="">设备管理3</a></li>
+                            <li><a href="">设备管理4</a></li>
+                            <li><a href="">设备管理5</a></li>
+                            <li><a href="">设备管理6</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="">系统设置</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="header_myself fr">
+        <p>用户：管理员</p>
+        <a href="" data-toggle="modal" data-target=".bs-example-modal-sm">注销 &nbsp;<span class="caret"></span></a>
+    </div>
+</div>
+<!--header结束-->
+
+<!--content开始-->
+<div class="data_content">
+    <!-- <div class="data_time">
+        <img src="img/data_time.png" alt="" class="fl">
+        <input type="text" value="" id="demo-1" style="background: #04425f;width: 80px;" placeholder="选择日期">
+    </div> -->
+    <div class="data_info">
+        <div class="info_1 fl">
+            <div class="text_1">
+                <div class="fl">
+                    <img src="img/info_1.png" alt="" class="fl">
+                    <div class="fl">
+                        <p>服务器</p>
+                        <p>xd-log</p>
+                    </div>
+                </div>
+                <div class="fl">
+                    <img src="img/info_2.png" alt="" class="fl">
+                    <div class="fl">
+                        <p>服务器运行时间</p>
+                        <p>108天</p>
+                    </div>
+                </div>
+                <div class="fl">
+                    <img src="img/info_3.png" alt="" class="fl">
+                    <div class="fl">
+                        <p>服务器资源状态</p>
+                        <p>良好</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="data_main">
+        <div class="main_left fl">
+            <div class="left_1">
+                <div class="main_title">
+<!--                     <img src="img/title_1.png" alt="">-->
+<!--                    CPU概览-->
+                    <a href="" class="nav_current" style="color:#ffffff;">CPU详情</a>
+                </div>
+                <div id="chart_1" class="chart" style="width:100%;height: 280px;"></div>
+            </div>
+            <div class="left_2">
+                <div class="main_title">
+                    <!-- <img src="img/title_2.png" alt=""> -->
+                    内存概览
+                </div>
+                <div id="chart_2" class="chart" style="width:100%;height: 280px;"></div>
+            </div>
+        </div>
+        <div class="main_center fl">
+            <div class="center_text">
+                <div class="main_title">
+                    <!-- <img src="img/title_3.png" alt=""> -->
+                    服务器总体情况
+                </div>
+                <div style="width:65%;height:610px;float: left">
+                    <!--服务器评分仪表图-->
+                    <div id="chart_5" class="chart" style="height: 320px; float: top"></div>
+<!--                        <h3 id="top" style="color:#ff2c16;margin-top: 40px;margin-left: 40px">服务器评分仪表图</h3>-->
+
+                    <!--服务器配置信息展示图-->
+                    <div id="center_left_bottom" style="height: 300px;float: bottom">
+                        <h3 id="bottom" style="color:#ff2c16;margin-top: 60px;margin-left: 40px">服务器配置信息</h3>
+                        <ul id="con">
+                            <li><span style="color:#18fff2;padding-left: 50px">cpu：Inteli3 8100</span></li>
+                            <li><span style="color:#18fff2;padding-left: 50px">mem：Kingston DDR4 2666 8GB</span></li>
+                            <li><span style="color:#18fff2;padding-left: 50px">主板：MSIZ370-A PRO</span></li>
+                            <li><span style="color:#18fff2;padding-left: 50px">显卡：ASUS TUF-GeForce GTX1660-O6G-GAMING</span></li>
+                        </ul>
+                    </div>
+
+                </div>
+<!--                <div id="echart_test" style="width:45%;height:610px;float: right">-->
+
+                <!--警示滚动提示栏-->
+                    <div  id="center_right" style="height: 20px">
+                        <!--  头部 -->
+                        <h3 id="moocTitle" style="color:#ff2c16;margin-top: 40px">故障预警</h3>
+                        <!--  头部结束 -->
+                        <!--  中间 -->
+                        <div  id="moocBox">
+                            <ul id="con1">
+                                <li><span style="color:#18fff2;">cpu利用率达到80%</span><span style="color:#18FFF2;padding-left: 20px">2019-09-01</span></li>
+                                <li><span style="color:#18fff2;">cpu利用率达到80%</span><span style="color:#18FFF2;padding-left: 20px">2019-09-01</span></li>
+                                <li><span style="color:#18fff2;">cpu利用率达到80%</span><span style="color:#18FFF2;padding-left: 20px">2019-09-01</span></li>
+                                <li><span style="color:#18fff2;">cpu利用率达到80%</span><span style="color:#18FFF2;padding-left: 20px">2019-09-01</span></li>
+                                <li><span style="color:#18fff2;">cpu利用率达到80%</span><span style="color:#18FFF2;padding-left: 20px">2019-09-01</span></li>
+                                <li><span style="color:#18fff2;">cpu利用率达到80%</span><span style="color:#18FFF2;padding-left: 20px">2019-09-01</span></li>
+                                <li><span style="color:#18fff2;">cpu利用率达到80%</span><span style="color:#18FFF2;padding-left: 20px">2019-09-01</span></li>
+                                <li><span style="color:#18fff2;">cpu利用率达到80%</span><span style="color:#18FFF2;padding-left: 20px">2019-09-01</span></li>
+                            </ul>
+                            <ul id="con2">
+                            </ul>
+                        </div>
+                        <!--  中间结束 -->
+<!--                    </div>-->
+                    <!--  慕课网课程公告结束 -->
+
+                    <script type="text/javascript">
+                        var area = document.getElementById('moocBox');
+                        var con1 = document.getElementById('con1');
+                        var con2 = document.getElementById('con2');
+                        var speed = 50;
+                        area.scrollTop = 0;
+                        con2.innerHTML = con1.innerHTML;//让con2复制con1内容，con2的存在是为了填补空白
+                        function scrollUp(){
+                            // 当area的滚动高度和con1.scrollHeight高度相等时，回到初始高度；如果没有，继续++
+                            if(area.scrollTop >= con1.scrollHeight) {
+                                area.scrollTop = 0;
+                            }else{
+                                area.scrollTop ++; //
+                            }
+                        }
+                        var myScroll = setInterval("scrollUp()",speed);
+                        // 移入移除效果
+                        // 鼠标滑过，停止滑动，停止定时器
+                        // 鼠标移除，继续滑动，启动定时器
+                        area.onmouseover = function(){
+                            clearInterval(myScroll);
+                        }
+                        area.onmouseout = function(){
+                            // setInterval第一个参数可以是函数也可以是表达式，第二个事件间隔
+                            myScroll = setInterval("scrollUp()",speed);
+                        }
+                    </script>
+                </div>
+<!--                <div id="chart_5" class="chart" style="width:50%;height: 280px;">服务器状态</div>-->
+            </div>
+        </div>
+        <div class="main_right fr">
+            <div class="right_1">
+                <div class="main_title">
+                    <!-- <img src="img/title_4.png" alt=""> -->
+                    硬盘概览
+                </div>
+
+                <div id="chart_3" class="echart" style="width:100%;height: 280px;"></div>
+            </div>
+            <div class="right_2">
+                <div class="main_title">
+                    <!-- <img src="img/title_5.png" alt=""> -->
+                    网络概览
+                </div>
+                <div id="chart_4" class="echart fl" style="width:100%;height: 280px;"></div>
+<!--                <div style="width: 80%;" class="text_sum">-->
+<!--                    <div class="fl" style="width:30%">332</div>-->
+<!--                    <div class="fl" style="width:40%">统计</div>-->
+<!--                    <div class="fr" style="width:30%">505</div>-->
+
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+    <div class="data_bottom">
+        <div class="bottom_1 fl">
+            <div class="main_title">
+                <img src="img/title_6.png" alt="">
+                行驶里程排名前5位
+            </div>
+            <div class="main_table">
+
+            </div>
+        </div>
+        <div class="bottom_center fl">
+            <div class="bottom_2 fl">
+                <div class="main_title">
+                    <img src="img/title_6.png" alt="">
+                    行驶时长排名前5位
+                </div>
+                <div class="main_table">
+
+                </div>
+            </div>
+            <div class="bottom_3 fl">
+                <div class="main_title">
+                    <img src="img/title_6.png" alt="">
+                    行驶最高时速前5位
+                </div>
+                <div class="main_table">
+
+                </div>
+            </div>
+        </div>
+        <div class="bottom_4 fr">
+            <div class="main_title">
+                <img src="img/title_5.png" alt="">
+                行驶次数车辆前5位
+            </div>
+            <div class="main_table">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--content结束-->
+
+
+<!--注销模态框  开始-->
+<div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">注销</h4>
+            </div>
+            <div class="modal-body">
+                <p>确认退出该系统吗？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--注销模态框  结束-->
+
+
+
+
+</body>
+
+
+
+
+<script>
+    $('#demo-1').fdatepicker();
+
+    var nowTemp = new Date();
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+    var checkin = $('#dpd1').fdatepicker({
+        onRender: function (date) {
+            return date.valueOf() < now.valueOf() ? 'disabled' : '';
+        }
+    }).on('changeDate', function (ev) {
+        if (ev.date.valueOf() > checkout.date.valueOf()) {
+            var newDate = new Date(ev.date)
+            newDate.setDate(newDate.getDate() + 1);
+            checkout.update(newDate);
+        }
+        checkin.hide();
+        $('#dpd2')[0].focus();
+    }).data('datepicker');
+    var checkout = $('#dpd2').fdatepicker({
+        onRender: function (date) {
+            return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+        }
+    }).on('changeDate', function (ev) {
+        checkout.hide();
+    }).data('datepicker');
+</script>
+</html>

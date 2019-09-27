@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.DataDao">                       <!--mapper动态代理，省去PaperDao实现类-->
+    <resultMap id="cpuDataResultMap" type="CpuData" >           <!--返回数据封装类型，建数据映射到结果集中-->
+        <result property="timeCreate" column="time"/>          <!--id property：映射pojo对象的主键属性-->
+        <result property="cpu" column="cpu"/>        <!--??????-->
+        <result property="host" column="host"/>
+        <result property="usage_guest" column="usage_guest"/>
+        <result property="usage_guest_nice" column="usage_guest_nice"/>
+        <result property="usage_idle" column="usage_idle"/>
+        <result property="usage_iowait" column="usage_iowait"/>
+        <result property="usage_irq" column="usage_irq"/>
+        <result property="usage_nice" column="usage_nice"/>
+        <result property="usage_softirq" column="usage_softirq"/>
+        <result property="usage_steal" column="usage_steal"/>
+        <result property="usage_system" column="usage_system"/>
+        <result property="usage_user" column="usage_user"/>
+    </resultMap>
+
+    <resultMap id="diskDataResultMap" type="DiskData" >
+        <result property="timeCreate" column="time"/>
+        <result property="device" column="device"/>
+        <result property="fstype" column="fstype"/>
+        <result property="host" column="host"/>
+        <result property="mode" column="mode"/>
+        <result property="path" column="path"/>
+        <result property="free" column="free"/>
+        <result property="inodes_free" column="inodes_free"/>
+        <result property="inodes_total" column="inodes_total"/>
+        <result property="inodes_used" column="inodes_used"/>
+        <result property="total" column="total"/>
+        <result property="used" column="used"/>
+        <result property="used_precent" column="used_precent"/>
+    </resultMap>
+
+    <resultMap id="memDataResultMap" type="MemData">
+        <result property="timeCreate" column="time"/>
+        <result property="active" column="active"/>
+        <result property="available" column="available"/>
+        <result property="buffered" column="buffered"/>
+        <result property="cached" column="cached"/>
+        <result property="dirty" column="dirty"/>
+        <result property="free" column="free"/>
+        <result property="inactive" column="inactive"/>
+        <result property="shared" column="shared"/>
+        <result property="total" column="total"/>
+        <result property="used" column="used"/>
+        <result property="available_percent" column="available_percent"/>
+        <result property="used_percent" column="used_percent"/>
+        <result property="host" column="host"/>
+    </resultMap>
+    <resultMap id="netDataResultMap" type="NetData">
+        <result property="timeCreate" column="time"/>
+        <result property="host" column="host"/>
+        <result property="bytes_recv" column="bytes_recv"/>
+        <result property="bytes_sent" column="bytes_sent"/>
+        <result property="drop_in" column="drop_in"/>
+        <result property="drop_out" column="drop_out"/>
+        <result property="err_in" column="err_in"/>
+        <result property="err_out" column="err_out"/>
+        <result property="packets_recv" column="packets_recv"/>
+        <result property="packets_sent" column="packets_sent"/>
+    </resultMap>
+
+    <select id="queryOneCpuData" resultMap="cpuDataResultMap">            /*resultMap：返回结果很多的时候需要/级联查询需要*/
+        SELECT time,cpu,host,usage_guest,usage_guest_nice,usage_idle,usage_iowait,usage_irq,usage_nice,usage_softirq,usage_steal,usage_system,usage_user
+        FROM cpu ORDER BY time DESC LIMIT 1;
+    </select>
+    <select id="queryOneDiskData" resultMap="diskDataResultMap">
+        SELECT time,device,fstype,host,mode,path,free,inodes_free,inodes_total,inodes_used,total,used,used_precent
+        FROM disk ORDER BY time DESC LIMIT 1;
+    </select>
+    <select id="queryOneMemData" resultMap="memDataResultMap">
+        SELECT time,active,available,buffered,cached,dirty,free,inactive,shared,total,used,available_percent,used_percent
+        FROM mem ORDER BY time DESC LIMIT 1;
+    </select>
+    <select id="queryOneNetData" resultMap="netDataResultMap">
+        SELECT time,host,bytes_recv,bytes_sent,drop_in,err_out,packets_recv,packets_sent
+        FROM net ORDER BY time DESC LIMIT 1;
+    </select>
+
+</mapper>

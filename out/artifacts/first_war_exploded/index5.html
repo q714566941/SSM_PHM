@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+
+    <script src="echarts/echarts.min.js"></script>
+    <script src="js/jquery-2.2.1.min.js"></script>
+</head>
+<body>
+    <div id="line" style="width: 600px;height:300px;position:absolute; left:610px;top:8px;"></div>
+    <script type="text/javascript">
+
+        // var lineChart = echarts.init(document.getElementById('line'));
+        var ipNums = [];
+        var ipList = [];
+        function getData() {
+
+            var lineChart = echarts.init(document.getElementById('line'));
+            var postData={
+                "command":"select usage_user from cpu order by time desc limit 1"
+            }
+            $.ajax({
+                type:"post",
+                async:true,
+                url:"TestServlet2",
+                data:postData,
+                dataType:"json",
+                success:function(res){
+                    if(res){
+                        //排序
+                        // res.sort(function (a, b) { return b.val - a.val; });
+                        for(var i=0;i<res.length;i++){
+                            if(res[i]!=null ){
+                                ipList.push(res[i].time);
+                                ipNums.push(res[i].value);
+                            }
+                            // if(i>=5)
+                            //     break;
+                        }
+                        if (ipNums.length >= 10) {
+                            ipNums.shift();
+                            ipList.shift();
+                        }
+                        lineChart.hideLoading();
+                        // lineChart.setOption({
+                        //     xAxis: {
+                        //         data: ipList
+                        //     },
+                        //     legend:{
+                        //         data : ipList,
+                        //         selected:select
+                        //     },
+                        //     series:[{
+                        //         name:'ip地址',
+                        //         data:ipNums
+                        //     }]
+                        // });
+                        // lineChart.clear();
+                        lineChart.setOption({
+                            title:{
+                                text:'CPU user%',
+                                textStyle: {
+                                    color: "black",
+                                    fontSize:16,
+                                }
+                            },
+                            tooltip: {                      //动态的提示
+                                trigger: 'axis',
+                                axisPointer: {
+                                    type: 'cross',
+                                    label: {
+                                        backgroundColor: '#283b56'
+                                    }
+                                }
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: ipList,
+                                axisLine:{
+                                    lineStyle: {
+                                        color:'black',
+                                    }
+                                },
+                            },
+                            yAxis: {
+                                type: 'value',
+                                lineStyle: {
+                                    color:'black',
+                                }
+                            },
+                            // tooltip:{                        //静态的提示
+                            //     trigger: 'item',
+                            //     formatter: '{a}:{b}<br\>{c}'
+                            // },
+                            series: [{
+                                name:'user(%)',
+                                data: ipNums,
+                                type: 'line',
+                            }]
+                        });
+
+                    }
+                }
+            });
+        }
+        // getData();
+        window.setInterval(getData,1000)
+
+    </script>
+
+
+</body>
+</html>
